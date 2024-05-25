@@ -5,6 +5,7 @@ if(isset($_GET['prompt']) && isset($_GET['answer'])){
     $text2 = strtolower($_GET['answer']);
     $user = (isset($_GET['name2']) && $_GET['name2'] != "") ? strtolower($_GET['name2']) : "bill";
     if(substr($text, -1) != '?'){
+        //The intention of this is the unpredictability of my ChatGPT bot adding a question mark at the end of the prompt
         $text .= '?';
     }
     $text = "gee ".$user."! how come your mom lets you " . $text;
@@ -14,7 +15,7 @@ if(isset($_GET['prompt']) && isset($_GET['answer'])){
     $textImage = new Imagick();
     $textImage->newImage($image->getImageWidth(), $image->getImageHeight(), new ImagickPixel('none'));
     $textDraw = new ImagickDraw();
-    $textDraw->setFont('Poquito.otf');
+    $textDraw->setFont('fonts/Poquito.otf');
 
     $font_size = 18;
     $textDraw->setFontSize($font_size);
@@ -83,17 +84,29 @@ if(isset($_GET['prompt']) && isset($_GET['answer'])){
     $image->compositeImage($textImage, Imagick::COMPOSITE_OVER, 0, 0);
 
     if(isset($_GET['avatar1']) && $_GET['avatar1'] != ""){
-        $image2 = new Imagick($_GET['avatar1']);
-        $image2->resizeImage(100, 100, Imagick::FILTER_LANCZOS, 1);
-        $image2->roundCorners(200, 200);
-        $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 40, 60);
+        try {
+            $image2 = new Imagick($_GET['avatar1']);
+            $image2->resizeImage(100, 100, Imagick::FILTER_LANCZOS, 1);
+            $image2->roundCorners(200, 200);
+            $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 40, 60);
+        } catch (ImagickException $e) {
+            //echo json_encode(array('success' => false, 'reason' => 'Failed to open avatar1 image'));
+            //header('Content-Type: application/json');
+            //exit();
+        }
     }
-
+    
     if(isset($_GET['avatar2']) && $_GET['avatar2'] != ""){
-        $image2 = new Imagick($_GET['avatar2']);
-        $image2->resizeImage(100, 100, Imagick::FILTER_LANCZOS, 1);
-        $image2->roundCorners(200, 200);
-        $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 190, 90);
+        try{
+            $image2 = new Imagick($_GET['avatar2']);
+            $image2->resizeImage(100, 100, Imagick::FILTER_LANCZOS, 1);
+            $image2->roundCorners(200, 200);
+            $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 190, 90);
+        }catch(ImagickException $e){
+            //echo json_encode(array('success' => false, 'reason' => 'Failed to open avatar2 image'));
+            //header('Content-Type: application/json');
+            //exit();
+        }
     }
 
     if(isset($_GET['raw']) && intval($_GET['raw']) == 1){

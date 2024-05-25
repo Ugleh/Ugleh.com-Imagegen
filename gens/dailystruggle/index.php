@@ -49,13 +49,18 @@ if(isset($_GET['option1']) && isset($_GET['option2'])){
 
         
     if(isset($_GET['avatar']) && $_GET['avatar'] != ""){
-        $image2 = new Imagick($_GET['avatar']);
-        $image2->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-        $image2->roundCorners(200, 200);
-        $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 160, 380);
+        try{
+            $image2 = new Imagick($_GET['avatar']);
+            $image2->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+            $image2->roundCorners(200, 200);
+            $image->compositeImage($image2, Imagick::COMPOSITE_OVER, 160, 380);
 
-        $overlay = new Imagick(__DIR__ . '/overlay.png');
-        $image->compositeImage($overlay, Imagick::COMPOSITE_OVER, 0, 0);
+            $overlay = new Imagick(__DIR__ . '/overlay.png');
+            $image->compositeImage($overlay, Imagick::COMPOSITE_OVER, 0, 0);
+        }catch(Exception $e){
+            //echo json_encode(array('success' => false, 'reason' => 'Failed to load avatar image'));
+            //exit();
+        }
     }
 
     if(isset($_GET['raw']) && intval($_GET['raw']) == 1){
