@@ -29,7 +29,7 @@ if(isset($_GET['option1']) && isset($_GET['option2'])){
         $textImage = new Imagick();
         $textImage->newImage($image->getImageWidth(), $image->getImageHeight(), new ImagickPixel('none'));
         $textDraw = new ImagickDraw();
-        $textDraw->setFont('Coopbl.ttf');
+        $textDraw->setFont('fonts/Coopbl.ttf');
         $textDraw->setFontSize(11);
         $textDraw->setFillColor('black');
         $textDraw->setTextAlignment(Imagick::ALIGN_CENTER);
